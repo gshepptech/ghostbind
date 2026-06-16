@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="340" viewBox="0 0 1000 340" role="img" aria-label="GhostBind signal flow: DualSense to tuning to virtual Xbox 360 controller">
+  <defs>
+    <linearGradient id="sf-violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9333EA"/>
+      <stop offset="1" stop-color="#7C22CE"/>
+    </linearGradient>
+    <linearGradient id="sf-mid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#A21CAF"/>
+    </linearGradient>
+    <linearGradient id="sf-pink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EC4899"/>
+      <stop offset="1" stop-color="#DB2777"/>
+    </linearGradient>
+    <linearGradient id="sf-wire" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9333EA"/>
+      <stop offset="0.5" stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#EC4899"/>
+    </linearGradient>
+    <marker id="sf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EC4899"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="340" rx="18" fill="#140A1F"/>
+
+  <!-- connecting wires (drawn first, behind cards) -->
+  <line x1="262" y1="170" x2="372" y2="170" stroke="url(#sf-wire)" stroke-width="5" stroke-linecap="round" marker-end="url(#sf-arrow)"/>
+  <line x1="628" y1="170" x2="738" y2="170" stroke="url(#sf-wire)" stroke-width="5" stroke-linecap="round" marker-end="url(#sf-arrow)"/>
+
+  <!-- STAGE 1: DualSense -->
+  <g transform="translate(40,70)">
+    <rect width="222" height="200" rx="16" fill="url(#sf-violet)"/>
+    <rect x="22" y="36" width="178" height="58" rx="14" fill="#ffffff" opacity="0.14"/>
+    <!-- gamepad mark -->
+    <g transform="translate(60,65) scale(0.85)" fill="#ffffff">
+      <path d="M -30 -7 Q -34 -19 -21 -19 L 21 -19 Q 34 -19 30 -7 L 35 14 Q 37 25 26 25 Q 19 25 16 18 L 12 11 L -12 11 L -16 18 Q -19 25 -26 25 Q -37 25 -35 14 Z"/>
+    </g>
+    <circle cx="50" cy="58" r="5.5" fill="#9333EA"/>
+    <circle cx="78" cy="58" r="5.5" fill="#EC4899"/>
+    <text x="24" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#ffffff">DualSense</text>
+    <text x="24" y="156" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#ffffff" opacity="0.92">Raw HID input (USB)</text>
+    <text x="24" y="176" font-family="ui-monospace, Menlo, monospace" font-size="11.5" fill="#ffffff" opacity="0.85">opened exclusively</text>
+  </g>
+
+  <!-- STAGE 2: Tuning -->
+  <g transform="translate(372,70)">
+    <rect width="256" height="200" rx="16" fill="url(#sf-mid)"/>
+    <text x="22" y="40" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#ffffff">GhostBind</text>
+    <text x="22" y="62" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#ffffff" opacity="0.92">mapping engine</text>
+
+    <!-- deadzone chip -->
+    <rect x="22" y="78" width="212" height="30" rx="9" fill="#ffffff" opacity="0.15"/>
+    <circle cx="40" cy="93" r="6" fill="#ffffff"/>
+    <text x="56" y="98" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#ffffff">deadzone (inner / outer)</text>
+
+    <!-- curve chip -->
+    <rect x="22" y="114" width="212" height="30" rx="9" fill="#ffffff" opacity="0.15"/>
+    <path d="M 32 99 q 12 0 16 -12" transform="translate(0,30)" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <text x="56" y="134" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#ffffff">response curve</text>
+
+    <!-- sens chip -->
+    <rect x="22" y="150" width="212" height="30" rx="9" fill="#ffffff" opacity="0.15"/>
+    <text x="34" y="170" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#ffffff">sensitivity · remap · invert</text>
+  </g>
+
+  <!-- STAGE 3: Virtual Xbox 360 -->
+  <g transform="translate(738,70)">
+    <rect width="222" height="200" rx="16" fill="url(#sf-pink)"/>
+    <rect x="22" y="36" width="178" height="58" rx="14" fill="#ffffff" opacity="0.14"/>
+    <g transform="translate(60,65) scale(0.85)" fill="#ffffff">
+      <path d="M -30 -7 Q -34 -19 -21 -19 L 21 -19 Q 34 -19 30 -7 L 35 14 Q 37 25 26 25 Q 19 25 16 18 L 12 11 L -12 11 L -16 18 Q -19 25 -26 25 Q -37 25 -35 14 Z"/>
+    </g>
+    <circle cx="42" cy="46" r="4.5" fill="#16A34A"/>
+    <text x="24" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" font-weight="800" fill="#ffffff">Virtual Xbox 360</text>
+    <text x="24" y="156" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#ffffff" opacity="0.95">XInput via ViGEmBus</text>
+    <text x="24" y="176" font-family="ui-monospace, Menlo, monospace" font-size="11.5" fill="#ffffff" opacity="0.9">every game sees this</text>
+  </g>
+
+  <!-- caption -->
+  <text x="40" y="36" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#EC4899">Signal flow</text>
+  <text x="146" y="36" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="#B79BD4">your physical pad in, a standard XInput device out</text>
+  <text x="296" y="170" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#C026D3">tune</text>
+  <text x="660" y="170" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#EC4899">emit</text>
+</svg>

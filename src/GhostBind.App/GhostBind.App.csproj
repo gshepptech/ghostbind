@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\ghost.ico</ApplicationIcon>
+    <AssemblyName>GhostBind</AssemblyName>
+    <RootNamespace>GhostBind.App</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Embedded as a Resource so we can also load it for the WPF Window.Icon
+         property at runtime, not just for the exe shell icon. -->
+    <Resource Include="Assets\ghost.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.2.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
+    <PackageReference Include="Nefarius.Drivers.HidHide" Version="3.3.0" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GhostBind.Core\GhostBind.Core.csproj" />
+  </ItemGroup>
+
+</Project>

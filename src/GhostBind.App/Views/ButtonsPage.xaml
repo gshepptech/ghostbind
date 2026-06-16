@@ -1,0 +1,93 @@
+<Page x:Class="GhostBind.App.Views.ButtonsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Buttons">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Button Mapping" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock TextWrapping="Wrap" Margin="0,4,0,16"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Text="Map any DualSense button to any Xbox 360 output. Mode controls activator behavior — Regular fires while held, Tap fires once on quick press, Hold fires after a long press, DoubleTap fires after two quick taps. Layer 2 gives a second binding per button that activates while you hold the Shift Button below." />
+
+            <ui:Card Padding="20" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Shift Button (hold to activate Layer 2)" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,4,0,8" FontSize="11"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                               Text="When this button is held, every other button uses its Layer 2 mapping instead of its primary one. Set to (none) to disable Layer 2 entirely. Tip: pick a button you don't otherwise use much (like Touchpad Click)." />
+                    <ComboBox x:Name="ShiftPicker" ItemsSource="{Binding ShiftOptions}" SelectedItem="{Binding ShiftButton, Mode=TwoWay}" SelectionChanged="OnShiftChanged" Width="280" HorizontalAlignment="Left">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Padding="0">
+                <StackPanel>
+                    <Grid Margin="20,12,20,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Source"     FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Grid.Column="1" Text="Mode"       FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Grid.Column="2" Text="Output"     FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Grid.Column="3" Text="ms"         FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Grid.Column="4" Text="Layer 2"    FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    </Grid>
+
+                    <ItemsControl x:Name="MappingList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="20,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140" />
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding SourceLabel}" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
+                                    <ComboBox  Grid.Column="1" ItemsSource="{Binding ModeOptions}"  SelectedItem="{Binding Mode, Mode=TwoWay}"   Margin="0,0,8,0">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <ComboBox  Grid.Column="2" ItemsSource="{Binding TargetOptions}" SelectedItem="{Binding Target, Mode=TwoWay}" Margin="0,0,8,0">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <ui:NumberBox Grid.Column="3" Value="{Binding Threshold, Mode=TwoWay}" Minimum="50" Maximum="2000"
+                                                  Visibility="{Binding ThresholdVisible}" Margin="0,0,8,0" />
+                                    <ComboBox  Grid.Column="4" ItemsSource="{Binding TargetOptions}" SelectedItem="{Binding Layer2Target, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,55 @@
+<Page x:Class="GhostBind.App.Views.ProfilesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Profiles">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Profiles" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="Save and switch between configurations. Files live in %AppData%\GhostBind\Profiles."
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Margin="0,4,0,24" />
+
+            <ui:Card Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Active profile" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" x:Name="ProfileSelector" SelectionChanged="OnProfileChanged" />
+                        <ui:Button Grid.Column="1" Content="Save" Appearance="Primary" Margin="8,0,0,0" Click="OnSave" />
+                        <ui:Button Grid.Column="2" Content="Delete" Margin="8,0,0,0" Click="OnDelete" />
+                    </Grid>
+
+                    <TextBlock Text="Virtual controller output" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,16,0,4" />
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Margin="0,0,0,4"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                               Text="Xbox 360 = standard XInput pad (recommended). DualShock 4 = virtual PS4 controller, useful only for games that show PlayStation prompts (Persona, Yakuza, FF series). Switching requires a service restart." />
+                    <ComboBox x:Name="OutputTypePicker" SelectionChanged="OnOutputTypeChanged" Width="280" HorizontalAlignment="Left" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Create new profile" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Grid.Column="0" x:Name="NewName" PlaceholderText="Profile name" />
+                        <ui:Button Grid.Column="1" Content="Create" Appearance="Primary" Margin="8,0,0,0" Click="OnCreate" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <TextBlock x:Name="StatusLine" Margin="4,16,0,0"
+                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,93 @@
+<Page x:Class="GhostBind.App.Views.LightingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Lighting">
+
+    <Page.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,16,0,2" />
+        </Style>
+        <Style x:Key="HintStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Lighting" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="Set the DualSense lightbar color. Useful as a visual cue per profile (e.g. red for shooters, blue for racing)."
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Margin="0,4,0,24" TextWrapping="Wrap" />
+
+            <ui:Card Padding="20">
+                <StackPanel>
+                    <CheckBox x:Name="Enabled" Content="Override lightbar with custom color"
+                              Click="OnChanged" FontWeight="SemiBold" />
+                    <TextBlock Style="{StaticResource HintStyle}" Margin="22,4,0,0"
+                               Text="Off = lightbar stays whatever Windows / the last app set it to. On = GhostBind paints it with the color below." />
+
+                    <Grid Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Red" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Slider Grid.Column="1" x:Name="R" Minimum="0" Maximum="255" SmallChange="1" LargeChange="16"
+                                ValueChanged="OnSliderChanged" />
+                        <TextBlock Grid.Column="2" MinWidth="40" Text="{Binding ElementName=R, Path=Value, StringFormat={}{0:F0}}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Green" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Slider Grid.Column="1" x:Name="G" Minimum="0" Maximum="255" SmallChange="1" LargeChange="16"
+                                ValueChanged="OnSliderChanged" />
+                        <TextBlock Grid.Column="2" MinWidth="40" Text="{Binding ElementName=G, Path=Value, StringFormat={}{0:F0}}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Blue" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Slider Grid.Column="1" x:Name="B" Minimum="0" Maximum="255" SmallChange="1" LargeChange="16"
+                                ValueChanged="OnSliderChanged" />
+                        <TextBlock Grid.Column="2" MinWidth="40" Text="{Binding ElementName=B, Path=Value, StringFormat={}{0:F0}}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="Preview" />
+                    <Border x:Name="Preview" Height="60" CornerRadius="6" BorderThickness="1"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <ui:Button Content="Red"        Tag="Red"        Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Green"      Tag="Green"      Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Blue"       Tag="Blue"       Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Purple"     Tag="Purple"     Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Orange"     Tag="Orange"     Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Teal"       Tag="Teal"       Click="OnPreset" Margin="0,0,8,0" />
+                        <ui:Button Content="Off"        Tag="Off"        Click="OnPreset" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

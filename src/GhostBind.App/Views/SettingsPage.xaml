@@ -1,0 +1,169 @@
+<Page x:Class="GhostBind.App.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Settings">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="Service status, HID hiding, and dependencies."
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Margin="0,4,0,24" />
+
+            <ui:Card Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Service" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" x:Name="ServiceStatusText" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <ui:Button Grid.Column="1" Content="Restart" Margin="8,0,0,0" Click="OnRestart" />
+                        <ui:Button Grid.Column="2" Content="Stop" Margin="8,0,0,0" Click="OnStop" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Button event capture" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,8"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="Records every raw button transition with millisecond timestamps. Use this to confirm whether bumpers/buttons are chattering at the hardware level. Click Start, tap the suspect button(s) about 10 times normally, then click Stop. If you see multiple DOWN/UP within a few ms for one physical press, the controller is chattering — bump up the debounce slider below." />
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,8">
+                        <ui:Button Content="Start capture" Click="OnCaptureStart" Appearance="Primary" Margin="0,0,8,0" />
+                        <ui:Button Content="Stop" Click="OnCaptureStop" Margin="0,0,8,0" />
+                        <ui:Button Content="Clear" Click="OnCaptureClear" />
+                    </StackPanel>
+                    <Border Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="4" Padding="8" MinHeight="120" MaxHeight="240">
+                        <ScrollViewer x:Name="CaptureScroll" VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="CaptureLog" FontFamily="Consolas, Cascadia Mono" FontSize="11"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="NoWrap"
+                                       Text="(idle — click Start to begin capturing)" />
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Button debounce" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,4"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="Filters mechanical button chatter. When a microswitch briefly bounces 1→0→1 on press or release, some games read that as two separate presses. Bump this up if your bumpers (LB/RB) register twice on a single press. 0 = off (lowest latency). 5–10 ms kills typical chatter without being perceptible. Above 20 ms starts to feel sluggish." />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="100" /></Grid.ColumnDefinitions>
+                        <Slider Grid.Column="0" x:Name="DebounceSlider" Minimum="0" Maximum="50" SmallChange="1" LargeChange="5"
+                                ValueChanged="OnDebounceChanged" />
+                        <TextBlock Grid.Column="1" Text="{Binding ElementName=DebounceSlider, Path=Value, StringFormat={}{0:F0} ms}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Polling rate" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,4"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="The DualSense reports input over USB at ~250 Hz (every 4 ms) — that's the hardware-determined rate, not configurable from software. What IS configurable is how long we wait between processing iterations after each report. Default 0 = process every packet as soon as it arrives. Higher values save CPU at the cost of input latency." />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="100" /></Grid.ColumnDefinitions>
+                        <Slider Grid.Column="0" x:Name="PollDelay" Minimum="0" Maximum="8000" SmallChange="100" LargeChange="500"
+                                ValueChanged="OnPollDelayChanged" />
+                        <TextBlock Grid.Column="1" Text="{Binding ElementName=PollDelay, Path=Value, StringFormat={}{0:F0} μs}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Diagnostics" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Margin="0,8,0,4" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="Live readouts of how fast we're polling the DualSense and how long our processing pipeline takes per frame. The bridge can't measure the GAME's latency — only the input → virtual controller round-trip on our side." />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="HID poll rate" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="PollRateText" FontFamily="Consolas, Cascadia Mono"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="—" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Bridge processing time" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="FrameTimeText" FontFamily="Consolas, Cascadia Mono"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="—" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Lightbar write" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="WriteStatusText" FontFamily="Consolas, Cascadia Mono"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="—" />
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="HID hiding" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock x:Name="HidHideStatusText" TextWrapping="Wrap" Margin="0,8,0,4"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,4,0,12"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="GhostBind auto-registers itself with HidHide on launch. If HidHide is installed, this hides the physical DualSense from every other app while GhostBind is running. GhostBind also opens the pad in exclusive mode as a backstop." />
+                    <TextBlock>
+                        <Hyperlink NavigateUri="https://github.com/nefarius/HidHide/releases" RequestNavigate="OnNavigate">
+                            Get HidHide on GitHub
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Dependencies" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Margin="0,8,0,0">
+                        <Hyperlink NavigateUri="https://github.com/nefarius/ViGEmBus/releases" RequestNavigate="OnNavigate">
+                            ViGEmBus driver (required)
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Margin="0,4,0,0">
+                        <Hyperlink NavigateUri="https://github.com/nefarius/HidHide/releases" RequestNavigate="OnNavigate">
+                            HidHide driver (optional)
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,16,0,0" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="About" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="GhostBind — free DualSense bridge for Windows."
+                               Margin="0,8,0,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="Built on ViGEmBus, HidSharp, and WPF-UI."
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

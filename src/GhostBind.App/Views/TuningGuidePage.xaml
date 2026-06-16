@@ -1,0 +1,217 @@
+<Page x:Class="GhostBind.App.Views.TuningGuidePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="Tuning Guide">
+
+    <Page.Resources>
+        <Style x:Key="H1" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,16,0,8" />
+        </Style>
+        <Style x:Key="Body" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+        <Style x:Key="TableHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="Cell" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style x:Key="CellSymptom" TargetType="TextBlock" BasedOn="{StaticResource Cell}">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="24,24,24,0">
+            <TextBlock Text="Tuning Guide" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock TextWrapping="Wrap" Margin="0,4,0,0"
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Text="Per-game guides on what to tweak when something feels off after applying a preset. Each tab is a recipe for symptom → change → direction." />
+        </StackPanel>
+
+        <TabControl Grid.Row="1" Margin="24,16,24,24"
+                    Background="Transparent"
+                    BorderThickness="0">
+            <TabItem Header="Fortnite">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,16,8,16">
+                    <StackPanel>
+
+                        <!-- Section 1: Confirmation + how to find the curve -->
+                        <ui:Card Padding="20">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource H1}" Text="Yes — your custom curve is baked into the preset" Margin="0,0,0,8" />
+                                <TextBlock Style="{StaticResource Body}"
+                                           Text="The Fortnite preset uses CurveType.Custom with the exact 5-point shape we designed:" />
+                                <TextBlock Margin="0,4,0,12"
+                                           Foreground="{DynamicResource SystemAccentColorBrush}"
+                                           FontFamily="Consolas, Cascadia Mono"
+                                           FontSize="12"
+                                           Text="(0, 0) → (0.25, 0.07) → (0.50, 0.22) → (0.75, 0.55) → (1.0, 1.0)" />
+
+                                <TextBlock Style="{StaticResource Body}" Text="To see and edit it:" />
+                                <TextBlock Style="{StaticResource Body}" Margin="12,4,0,0"
+                                           Text="1.  Go to the Sticks page." />
+                                <TextBlock Style="{StaticResource Body}" Margin="12,2,0,0"
+                                           Text="2.  The Response curve dropdown on each stick will show 'Custom'." />
+                                <TextBlock Style="{StaticResource Body}" Margin="12,2,0,0"
+                                           Text="3.  The drag editor appears right under the dropdown — three middle dots (at 25 / 50 / 75% input). Drag any dot up/down to change that point's output. The line redraws live." />
+                            </StackPanel>
+                        </ui:Card>
+
+                        <!-- Section 2: Curve tuning table -->
+                        <ui:Card Padding="20" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource H1}" Text="Tuning the curve — what to change for each 'feels off' symptom" Margin="0,0,0,12" />
+
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource TableHeader}" Text="Symptom" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource TableHeader}" Text="What to change" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource TableHeader}" Text="Direction" />
+                                </Grid>
+
+                                <ItemsControl x:Name="CurveRows">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}" BorderThickness="0,1,0,0" Padding="0,8,0,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="1.4*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Style="{StaticResource CellSymptom}" Text="{Binding Symptom}" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="1" Style="{StaticResource Cell}" Text="{Binding Change}" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="2" Style="{StaticResource Cell}" Text="{Binding Direction}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ui:Card>
+
+                        <!-- Section 3: Other settings table -->
+                        <ui:Card Padding="20" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource H1}" Text="Other settings (not the curve) that affect feel" Margin="0,0,0,12" />
+
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Style="{StaticResource TableHeader}" Text="Symptom" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource TableHeader}" Text="Setting" />
+                                    <TextBlock Grid.Column="2" Style="{StaticResource TableHeader}" Text="Direction" />
+                                </Grid>
+
+                                <ItemsControl x:Name="OtherRows">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}" BorderThickness="0,1,0,0" Padding="0,8,0,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="2*" />
+                                                        <ColumnDefinition Width="1.4*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Style="{StaticResource CellSymptom}" Text="{Binding Symptom}" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="1" Style="{StaticResource Cell}" Text="{Binding Change}" Margin="0,0,12,0" />
+                                                    <TextBlock Grid.Column="2" Style="{StaticResource Cell}" Text="{Binding Direction}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ui:Card>
+
+                        <!-- Section 4: Real-world tuning loop -->
+                        <ui:Card Padding="20" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource H1}" Text="Real-world tuning loop" Margin="0,0,0,8" />
+                                <TextBlock Style="{StaticResource Body}"
+                                           Text="The systematic way to dial it in:" />
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="1." Foreground="{DynamicResource SystemAccentColorBrush}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Body}"
+                                               Text="Apply the preset. Don't change anything yet." />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="2." Foreground="{DynamicResource SystemAccentColorBrush}" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource Body}" Margin="0,8,0,0"
+                                               Text="Play one match of solos. Pay attention to what feels wrong, not what feels right." />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="3." Foreground="{DynamicResource SystemAccentColorBrush}" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource Body}" Margin="0,8,0,0"
+                                               Text="Identify ONE symptom from the tables above. Change ONE setting. Don't shotgun it." />
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="4." Foreground="{DynamicResource SystemAccentColorBrush}" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource Body}" Margin="0,8,0,0"
+                                               Text="Play another match. Did that fix it? Make it worse?" />
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="5." Foreground="{DynamicResource SystemAccentColorBrush}" FontWeight="SemiBold" Margin="0,8,0,0" />
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource Body}" Margin="0,8,0,0"
+                                               Text="Iterate. Each change should be ~10% of the slider range. Big jumps make you lose the baseline." />
+                                </Grid>
+
+                                <TextBlock Style="{StaticResource Body}" Margin="0,16,0,0"
+                                           Text="After ~5 matches you'll have your personal version. Then save it as its own profile (Profiles page → Save) so you don't lose it if you click around." />
+                            </StackPanel>
+                        </ui:Card>
+
+                        <!-- Section 5: Common pattern -->
+                        <ui:Card Padding="20" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource H1}" Text="A common pattern I see" Margin="0,0,0,8" />
+                                <TextBlock Style="{StaticResource Body}"
+                                           Text="Most people coming from no-curve (linear default) → custom precision-style overshoot the precision part on day 1, can't track aim-assist properly, and undo the whole thing." />
+                                <TextBlock Style="{StaticResource Body}" Margin="0,8,0,0">
+                                    <Run Text="The fix is usually: " />
+                                    <Run FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="leave the 0.25 anchor alone for a week." />
+                                    <Run Text=" It's the 0.50 and 0.75 anchors that personalize the feel — the 0.25 is where aim assist lives, and aim assist doesn't like big changes." />
+                                </TextBlock>
+                            </StackPanel>
+                        </ui:Card>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

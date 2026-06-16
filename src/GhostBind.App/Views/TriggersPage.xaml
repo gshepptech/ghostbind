@@ -1,0 +1,192 @@
+<Page x:Class="GhostBind.App.Views.TriggersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:m="clr-namespace:GhostBind.Core.Mapping;assembly=GhostBind.Core"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      Title="Triggers">
+
+    <Page.Resources>
+        <ObjectDataProvider x:Key="CurveTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="m:CurveType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,16,0,2" />
+        </Style>
+        <Style x:Key="HintStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <TextBlock Text="Triggers" FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock Text="Per-trigger feel and travel. Pull a trigger to watch the bar fill — that's what the game sees."
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Margin="0,4,0,24" TextWrapping="Wrap" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ui:Card Grid.Column="0" Margin="0,0,8,0" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Left Trigger (L2)" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Deadzone" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Light press is ignored until you cross this threshold. Useful if your trigger has slop or rests slightly pulled." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="LDz" Minimum="0" Maximum="0.5" SmallChange="0.01" ValueChanged="OnLSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=LDz, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Anti-deadzone" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Lifts trigger output above the game's internal trigger deadzone. Useful in racing games for instant throttle response." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="LAntiDz" Minimum="0" Maximum="0.5" SmallChange="0.01" ValueChanged="OnLSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=LAntiDz, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Saturation (hair trigger)" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Where the trigger reads as 'fully pulled.' Lower = less travel for max output. Set to ~0.65 for hair-trigger shooting." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="LSat" Minimum="0.5" Maximum="1.0" SmallChange="0.01" ValueChanged="OnLSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=LSat, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Response curve" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Same options as sticks — Linear is the default and what most games expect. Smooth/Aggressive change how fast the trigger ramps to full." />
+                        <ComboBox x:Name="LCurve" ItemsSource="{Binding Source={StaticResource CurveTypes}}" SelectionChanged="OnLCurveChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Adaptive feedback (PS5)" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Physical resistance / clicks felt in the trigger. Off = normal feel. Rigid = constant resistance. Section = resistance only between two positions. Weapon = gun-trigger feel (resist then click breakthrough). Doesn't change what the game sees, only the feel." />
+                        <ComboBox x:Name="LMode" SelectionChanged="OnLEffectChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate><TextBlock Text="{Binding}" /></DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                <TextBlock Text="Start" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="LStart" Minimum="0" Maximum="9" SmallChange="1" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnLEffectNum" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                <TextBlock Text="End" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="LEnd" Minimum="0" Maximum="9" SmallChange="1" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnLEffectNum" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                <TextBlock Text="Force" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="LForce" Minimum="0" Maximum="255" SmallChange="10" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnLEffectNum" />
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Live" />
+                        <ProgressBar x:Name="LBar" Minimum="0" Maximum="1" Height="14" />
+                        <TextBlock x:Name="LValue" Text="0.00" HorizontalAlignment="Right" Margin="0,4,0,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontFamily="Consolas, Cascadia Mono" />
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Grid.Column="1" Margin="8,0,0,0" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Right Trigger (R2)" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Deadzone" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Light press is ignored until you cross this threshold. Useful if your trigger has slop or rests slightly pulled." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="RDz" Minimum="0" Maximum="0.5" SmallChange="0.01" ValueChanged="OnRSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=RDz, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Anti-deadzone" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Lifts trigger output above the game's internal trigger deadzone. Useful in racing games for instant throttle response." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="RAntiDz" Minimum="0" Maximum="0.5" SmallChange="0.01" ValueChanged="OnRSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=RAntiDz, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Saturation (hair trigger)" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Where the trigger reads as 'fully pulled.' Lower = less travel for max output. Set to ~0.65 for hair-trigger shooting." />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="90" /></Grid.ColumnDefinitions>
+                            <Slider Grid.Column="0" x:Name="RSat" Minimum="0.5" Maximum="1.0" SmallChange="0.01" ValueChanged="OnRSliderChanged" />
+                            <ui:NumberBox Grid.Column="1" Margin="8,0,0,0" Value="{Binding ElementName=RSat, Path=Value, Mode=TwoWay}" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" />
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Response curve" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Same options as sticks — Linear is the default and what most games expect. Smooth/Aggressive change how fast the trigger ramps to full." />
+                        <ComboBox x:Name="RCurve" ItemsSource="{Binding Source={StaticResource CurveTypes}}" SelectionChanged="OnRCurveChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumLabel}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Adaptive feedback (PS5)" />
+                        <TextBlock Style="{StaticResource HintStyle}"
+                                   Text="Physical resistance / clicks felt in the trigger. Try Weapon mode for gun-trigger feel in shooters." />
+                        <ComboBox x:Name="RMode" SelectionChanged="OnREffectChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate><TextBlock Text="{Binding}" /></DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                <TextBlock Text="Start" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="RStart" Minimum="0" Maximum="9" SmallChange="1" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnREffectNum" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                <TextBlock Text="End" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="REnd" Minimum="0" Maximum="9" SmallChange="1" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnREffectNum" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                <TextBlock Text="Force" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <ui:NumberBox x:Name="RForce" Minimum="0" Maximum="255" SmallChange="10" ClearButtonEnabled="False" SpinButtonPlacementMode="Hidden" ValueChanged="OnREffectNum" />
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource LabelStyle}" Text="Live" />
+                        <ProgressBar x:Name="RBar" Minimum="0" Maximum="1" Height="14" />
+                        <TextBlock x:Name="RValue" Text="0.00" HorizontalAlignment="Right" Margin="0,4,0,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontFamily="Consolas, Cascadia Mono" />
+                    </StackPanel>
+                </ui:Card>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
